@@ -1,12 +1,14 @@
 import SharpInstance from "sharp";
 import { promises as fs, constants } from "fs";
+import Delete from "./delete";
 
 const resizeFunc = async (
   srcimagepath: string,
   thumbpath: string,
   srcimageName: string,
   width: number,
-  height: number
+  height: number,
+  deletecmd: boolean
 ): Promise<string> => {
   const resimagname = `${srcimageName}_${width}_${height}`;
   try {
@@ -17,6 +19,11 @@ const resizeFunc = async (
       `${srcimagepath}${srcimageName}.jpg`
     ).resize(width, height);
     await save.toFile(`${thumbpath}${resimagname}.jpg`);
+  }
+
+  // Delete
+  if (deletecmd) {
+    await Delete(srcimageName, resimagname);
   }
 
   return `/.${thumbpath}${resimagname}.jpg`;

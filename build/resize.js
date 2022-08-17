@@ -14,7 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sharp_1 = __importDefault(require("sharp"));
 const fs_1 = require("fs");
-const resizeFunc = (srcimagepath, thumbpath, srcimageName, width, height) => __awaiter(void 0, void 0, void 0, function* () {
+const delete_1 = __importDefault(require("./delete"));
+const resizeFunc = (srcimagepath, thumbpath, srcimageName, width, height, deletecmd) => __awaiter(void 0, void 0, void 0, function* () {
     const resimagname = `${srcimageName}_${width}_${height}`;
     try {
         yield fs_1.promises.access(`${thumbpath}${resimagname}.jpg`, fs_1.constants.F_OK);
@@ -23,6 +24,10 @@ const resizeFunc = (srcimagepath, thumbpath, srcimageName, width, height) => __a
     catch (error) {
         const save = yield (0, sharp_1.default)(`${srcimagepath}${srcimageName}.jpg`).resize(width, height);
         yield save.toFile(`${thumbpath}${resimagname}.jpg`);
+    }
+    // Delete
+    if (deletecmd) {
+        yield (0, delete_1.default)(srcimageName, resimagname);
     }
     return `/.${thumbpath}${resimagname}.jpg`;
 });

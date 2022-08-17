@@ -21,7 +21,7 @@ describe("Test of the request", () => {
         expect(Response.status).toBe(200);
     }));
     it("2. Resolve of Image resize ", () => __awaiter(void 0, void 0, void 0, function* () {
-        const result = yield (0, index_1.resizeFunc)("./images/full/", "./images/thumb/", "fjord", 50, 50);
+        const result = yield (0, index_1.resizeFunc)("./images/full/", "./images/thumb/", "fjord", 50, 50, false);
         expect(result).toEqual("/../images/thumb/fjord_50_50.jpg");
     }));
 });

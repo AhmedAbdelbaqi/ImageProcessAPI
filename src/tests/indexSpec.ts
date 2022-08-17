@@ -14,15 +14,16 @@ describe("Test of the request", () => {
       "./images/thumb/",
       "fjord",
       50,
-      50
+      50,
+      false
     );
     expect(result).toEqual("/../images/thumb/fjord_50_50.jpg");
   });
 });
 
-describe("Endpoint Health Test" ,  () => {
-  it ("Server is Tested Successfully" , async() => {
+describe("Endpoint Health Test", () => {
+  it("Server is Tested Successfully", async () => {
     const Res = await request.get("/");
     expect(Res.statusCode).toEqual(200);
-  })
-})
+  });
+});

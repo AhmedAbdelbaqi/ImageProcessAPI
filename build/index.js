@@ -18,7 +18,6 @@ const resize_1 = __importDefault(require("./resize"));
 exports.resizeFunc = resize_1.default;
 const path_1 = __importDefault(require("path"));
 const healthCheck_1 = __importDefault(require("./healthCheck"));
-const delete_1 = __importDefault(require("./delete"));
 const imgsrc = "./images/full/";
 const thumbpath = "./images/thumb/";
 exports.thumbpath = thumbpath;
@@ -31,24 +30,17 @@ app.get("/image", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const height = parseInt(req.query.height);
         const imageName = req.query.filename;
         const deletecheck = req.query.delete;
-        if (deletecheck) {
-            yield (0, delete_1.default)(imageName);
-            const retpath = yield (0, resize_1.default)(imgsrc, thumbpath, imageName, width, height);
-        }
-        const retpath = yield (0, resize_1.default)(imgsrc, thumbpath, imageName, width, height);
+        const retpath = yield (0, resize_1.default)(imgsrc, thumbpath, imageName, width, height, deletecheck);
         yield res.sendFile(path_1.default.join(__dirname + retpath));
     }
     catch (e) {
-        const errorMessage = e.message;
+        const errorMessage = "Error";
         res.send(errorMessage);
         console.log(errorMessage);
     }
 }));
 // Healthcheck endpoint
 app.use("/", healthCheck_1.default);
-app.get("/delete", (req, res) => {
-    (0, delete_1.default)("fjord");
-});
 app.listen(port, () => {
     console.log(`Listento Port ${port}`);
 });
