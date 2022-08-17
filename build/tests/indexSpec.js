@@ -22,6 +22,12 @@ describe("Test of the request", () => {
     }));
     it("2. Resolve of Image resize ", () => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield (0, index_1.resizeFunc)("./images/full/", "./images/thumb/", "fjord", 50, 50);
-        expect(result).toEqual("/../images/thumb/fjord.jpg");
+        expect(result).toEqual("/../images/thumb/fjord_50_50.jpg");
+    }));
+});
+describe("Endpoint Health Test", () => {
+    it("Server is Tested Successfully", () => __awaiter(void 0, void 0, void 0, function* () {
+        const Res = yield request.get("/");
+        expect(Res.statusCode).toEqual(200);
     }));
 });
