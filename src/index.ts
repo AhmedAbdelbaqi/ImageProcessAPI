@@ -1,16 +1,13 @@
 import express from 'express';
 import resizeFunc from './resize';
-
-
-
 import path from 'path';
 import healthcheck from "./healthCheck";
-import { Console } from 'console';
+
 
 let imgsrc = './images/full/';
 let thumbpath = './images/thumb/';
 const app = express();
-const port = 3000;
+const port = 3000
 
 
 
@@ -30,7 +27,7 @@ try {
 
 
 // Healthcheck endpoint 
-app.use("/" , healthcheck);
+app.use("/" , healthcheck)
 
 
 
