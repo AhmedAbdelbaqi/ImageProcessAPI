@@ -12,34 +12,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resizeFunc = exports.app = void 0;
+exports.thumbpath = exports.resizeFunc = exports.app = void 0;
 const express_1 = __importDefault(require("express"));
-// import {promises as fs} from 'fs';
-const sharp_1 = __importDefault(require("sharp"));
+const resize_1 = __importDefault(require("./resize"));
+exports.resizeFunc = resize_1.default;
 const path_1 = __importDefault(require("path"));
-let imgsrc = './images/full/';
-let thumbpath = './images/thumb/';
+const healthCheck_1 = __importDefault(require("./healthCheck"));
+const delete_1 = __importDefault(require("./delete"));
+const imgsrc = "./images/full/";
+const thumbpath = "./images/thumb/";
+exports.thumbpath = thumbpath;
 const app = (0, express_1.default)();
 exports.app = app;
 const port = 3000;
-const resizeFunc = (srcimagepath, thumbpath, imageName, width, height) => __awaiter(void 0, void 0, void 0, function* () {
-    const save = yield (0, sharp_1.default)(`${srcimagepath}${imageName}.jpg`).resize(width, height);
-    yield save.toFile(`${thumbpath}${imageName}.jpg`);
-    return `/.${thumbpath}${imageName}.jpg`;
-});
-exports.resizeFunc = resizeFunc;
-app.get('/image', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/image", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let width = parseInt((req.query.width));
-        let height = parseInt((req.query.height));
-        let imageName = req.query.filename;
-        const retpath = yield resizeFunc(imgsrc, thumbpath, imageName, width, height);
+        const width = parseInt(req.query.width);
+        const height = parseInt(req.query.height);
+        const imageName = req.query.filename;
+        const deletecheck = req.query.delete;
+        if (deletecheck) {
+            yield (0, delete_1.default)(imageName);
+            const retpath = yield (0, resize_1.default)(imgsrc, thumbpath, imageName, width, height);
+        }
+        const retpath = yield (0, resize_1.default)(imgsrc, thumbpath, imageName, width, height);
         yield res.sendFile(path_1.default.join(__dirname + retpath));
-        console.log("Resize Done ");
     }
-    catch (Error) {
-        res.send(Error.message);
-        console.log(Error.message);
+    catch (e) {
+        const errorMessage = e.message;
+        res.send(errorMessage);
+        console.log(errorMessage);
     }
 }));
-app.listen(port, (() => { console.log(`Listento Port ${port}`); }));
+// Healthcheck endpoint
+app.use("/", healthCheck_1.default);
+app.get("/delete", (req, res) => {
+    (0, delete_1.default)("fjord");
+});
+app.listen(port, () => {
+    console.log(`Listento Port ${port}`);
+});
